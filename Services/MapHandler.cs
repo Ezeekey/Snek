@@ -51,6 +51,9 @@ public class MapHandler
 	private void MoveSnekInMap() 
 	{
 		_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].ItemType = MapItemType.Snek;
-		_map[_snek.LastTailCoordinate.X, _snek.LastTailCoordinate.Y].ItemType = MapItemType.None;
+		if (_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].ItemType != MapItemType.Food)
+		{
+			_map[_snek.LastTailCoordinate.X, _snek.LastTailCoordinate.Y].ItemType = MapItemType.None;
+		}
 	}
 }
