@@ -9,10 +9,7 @@ public class MapDrawer : IMapDrawer
 	{
 		if (!_firstRender)
 		{
-			for (int i = 0; i < width * height; i++)
-			{
-				Console.Write("\b \b");
-			}
+			Console.Clear();
 		}
 		else 
 		{
