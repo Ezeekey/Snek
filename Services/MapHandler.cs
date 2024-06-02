@@ -41,5 +41,16 @@ public class MapHandler
 	{
 		var gameOn = true;
 		await _mapDrawer.DrawAsync(_map, _width, _height);
+		if (_snek.TryMove(_map, _width, _height, Direction.Right))
+		{
+			MoveSnekInMap();
+		}
+		await _mapDrawer.DrawAsync(_map, _width, _height);
+	}
+
+	private void MoveSnekInMap() 
+	{
+		_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].ItemType = MapItemType.Snek;
+		_map[_snek.LastTailCoordinate.X, _snek.LastTailCoordinate.Y].ItemType = MapItemType.None;
 	}
 }
