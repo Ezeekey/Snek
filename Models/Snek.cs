@@ -97,11 +97,19 @@ public class Snek
 				{
 					direction = _lastDirection;
 				}
+				else 
+				{
+					_lastDirection = direction;
+				}
 				break;
 			case Direction.Down:
 				if (direction == Direction.Up)
 				{
 					direction = _lastDirection;
+				}
+				else 
+				{
+					_lastDirection = direction;
 				}
 				break;
 			case Direction.Left:
@@ -109,11 +117,19 @@ public class Snek
 				{
 					direction = _lastDirection;
 				}
+				else 
+				{
+					_lastDirection = direction;
+				}
 				break;
 			case Direction.Up:
 				if (direction == Direction.Down)
 				{
 					direction = _lastDirection;
+				}
+				else 
+				{
+					_lastDirection = direction;
 				}
 				break;
 			default:
