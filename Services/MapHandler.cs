@@ -12,6 +12,8 @@ public class MapHandler
 	private readonly Food[] _foods;
 	private readonly IMapDrawer _mapDrawer;
 	private readonly Stack<Action> _actionStack = new();
+	private int _score = 0;
+	private readonly int _maxScore;
 
 	public MapHandler(
 		int width, 
@@ -37,17 +39,22 @@ public class MapHandler
 				_height, 
 				_map);
 		}
+
+		_maxScore = _width * _height - 3;
 	}
 
 	public async Task GameLoop()
 	{
 		_ = _mapDrawer.DrawAsync(_map, _width, _height);
 		var gameOn = true;
+		var endMessage = $"You freaking died!";
 		using PlayerInputHandler playerInput = new();
 		while (gameOn)
 		{
 			await Task.Delay(200);
-			if (_snek.TryMove(_map, _width, _height, playerInput.CurrentDirection))
+			if (
+				_snek.TryMove(_map, _width, _height, playerInput.CurrentDirection) &&
+				_score < _maxScore)
 			{
 				CheckFoodAte();
 				MoveSnekInMap();
@@ -57,9 +64,14 @@ public class MapHandler
 			{
 				playerInput.Stop();
 				gameOn = false;
+				if (_score == _maxScore)
+				{
+					endMessage = $"You freaking won!";
+				}
 			}
 			_ = _mapDrawer.DrawAsync(_map, _width, _height);
 		}
+		Console.WriteLine($"{endMessage} {_score} points");
 	}
 
 	private void MoveSnekInMap() 
@@ -75,6 +87,7 @@ public class MapHandler
 	{
 		if (_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].ItemType == MapItemType.Food)
 		{
+			_score++;
 			_actionStack.Push(() => 
 				_ = _foods[_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].Index]
 					.TrySetPosition(_map, _width, _height));
