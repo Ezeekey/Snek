@@ -39,13 +39,23 @@ public class MapHandler
 
 	public async Task GameLoop()
 	{
+		_ = _mapDrawer.DrawAsync(_map, _width, _height);
 		var gameOn = true;
-		await _mapDrawer.DrawAsync(_map, _width, _height);
-		if (_snek.TryMove(_map, _width, _height, Direction.Right))
+		using PlayerInputHandler playerInput = new();
+		while (gameOn)
 		{
-			MoveSnekInMap();
+			await Task.Delay(200);
+			if (_snek.TryMove(_map, _width, _height, playerInput.CurrentDirection))
+			{
+				MoveSnekInMap();
+			}
+			else
+			{
+				playerInput.Stop();
+				gameOn = false;
+			}
+			_ = _mapDrawer.DrawAsync(_map, _width, _height);
 		}
-		await _mapDrawer.DrawAsync(_map, _width, _height);
 	}
 
 	private void MoveSnekInMap() 
