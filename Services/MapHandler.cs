@@ -71,7 +71,7 @@ public class MapHandler
 			}
 			_ = _mapDrawer.DrawAsync(_map, _width, _height);
 		}
-		Console.WriteLine($"{endMessage} {_score} points");
+		await _mapDrawer.DrawEndMessageAsync($"{endMessage} {_score} points");
 	}
 
 	private void MoveSnekInMap() 
