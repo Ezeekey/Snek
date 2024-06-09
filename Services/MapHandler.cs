@@ -1,4 +1,5 @@
 using SnekGame.Models;
+using System.Collections.Generic;
 
 namespace SnekGame.Services;
 
@@ -10,6 +11,7 @@ public class MapHandler
 	private readonly Snek _snek;
 	private readonly Food[] _foods;
 	private readonly IMapDrawer _mapDrawer;
+	private readonly Stack<Action> _actionStack = new();
 
 	public MapHandler(
 		int width, 
@@ -47,7 +49,9 @@ public class MapHandler
 			await Task.Delay(200);
 			if (_snek.TryMove(_map, _width, _height, playerInput.CurrentDirection))
 			{
+				CheckFoodAte();
 				MoveSnekInMap();
+				ExecuteEvents();
 			}
 			else
 			{
@@ -64,6 +68,26 @@ public class MapHandler
 		if (_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].ItemType != MapItemType.Food)
 		{
 			_map[_snek.LastTailCoordinate.X, _snek.LastTailCoordinate.Y].ItemType = MapItemType.None;
+		}
+	}
+
+	private void CheckFoodAte()
+	{
+		if (_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].ItemType == MapItemType.Food)
+		{
+			_actionStack.Push(() => 
+				_ = _foods[_map[_snek.HeadCoordinate.X, _snek.HeadCoordinate.Y].Index]
+					.TrySetPosition(_map, _width, _height));
+		}
+	}
+
+	private void ExecuteEvents()
+	{
+		while(_actionStack.Count > 0)
+		{
+			_actionStack
+				.Pop()
+				.Invoke();
 		}
 	}
 }
