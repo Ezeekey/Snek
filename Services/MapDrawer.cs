@@ -26,6 +26,12 @@ public class MapDrawer : IMapDrawer
 		return Task.CompletedTask;
 	}
 
+	public Task DrawEndMessageAsync(string message)
+	{
+		Console.WriteLine(message);
+		return Task.CompletedTask;
+	}
+
 	private string GetTile(MapItemType item)
 	{
 		return item switch
